@@ -6,7 +6,7 @@
 
 # Build and binary files
 Dockerfile
-template-go
+go-pebkac
 
 # Makefile things
 hack/bin/

@@ -19,7 +19,7 @@ ENV GO111MODULE=on
 # cf. https://www.reddit.com/r/golang/comments/hj4n44/improved_docker_go_module_dependency_cache_for/
 RUN go install -ldflags="-buildid= -w" -trimpath -v std
 
-WORKDIR /go/src/go.jlucktay.dev/template-go
+WORKDIR /go/src/go.jlucktay.dev/go-pebkac
 
 # This will save Go dependencies in the Docker cache, until/unless they change
 COPY go.mod go.sum ./
@@ -35,12 +35,12 @@ COPY . .
 
 # Compile! Should only compile our project since everything else has been precompiled by now, and future
 # (re)compilations will leverage the same cached layer(s)
-RUN go build -ldflags="-buildid= -w" -trimpath -v -o /bin/template-go
+RUN go build -ldflags="-buildid= -w" -trimpath -v -o /bin/go-pebkac
 
 FROM scratch AS runner
 
 # Bring common CA certificates and binary over
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /bin/template-go /bin/template-go
+COPY --from=builder /bin/go-pebkac /bin/go-pebkac
 
-ENTRYPOINT [ "/bin/template-go" ]
+ENTRYPOINT [ "/bin/go-pebkac" ]
